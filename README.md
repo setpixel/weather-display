@@ -63,7 +63,7 @@ Optional:
 
 1. disable leds
 2. set up to boot into weather display
-  1. sudo apt-get install matchbox-window-manager
+  1. sudo apt-get install matchbox-window-manager x11-xserver-utils unclutter
   1. cp /etc/xdg/lxsession/LXDE-pi/autostart /home/pi/.config/lxsession/LXDE-pi/autostart
   1. sudo nano /home/pi/.config/lxsession/LXDE-pi/autostart
   1. paste in:
@@ -74,6 +74,7 @@ Optional:
 @xset -dpms
 @xset s noblank
 @chromium-browser --kiosk --incognito http://localhost:3000
+@unclutter -idle 0.1 -root
   1. edit crontab
 3. Edit crontab to turn display on in the morning and off at late night
   crontab -e
