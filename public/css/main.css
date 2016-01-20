@@ -20,9 +20,9 @@ body {
 	height: 1920px;
 	margin: 0px;
 	padding: 0px;
-/*	-webkit-transform: rotate(90deg) translate(0px,-1920px);
+	-webkit-transform: rotate(90deg) translate(0px,-1920px);
 	-webkit-transform-origin: top left;
-*/	color: rgb(255,255,255);
+	color: rgb(255,255,255);
 }
 
 #bg.sunset {

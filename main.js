@@ -81,8 +81,10 @@ function init() {
       Logger.log('Channel ' + channel + ' value is now ' + value);
       if (channel == config.gpioPin) {
         if (value) {
+          Logger.log('PIR ACTIVATED.....');
           setPresent()
         } else {
+          Logger.log('PIR deactivated.....');
           present = 3
         }
       }
@@ -90,13 +92,9 @@ function init() {
     });
   }
 
-
   // turn on and off display
   // run chrome and open to display
 }
-
-
-
 
 function getForecast(force) {
   if (!localStorage.getItem("weatherData") || force) {
@@ -175,6 +173,9 @@ function checkTime() {
           quiet = false
           wakeGreeting = false
           tts.speak("It's " + moment().format('h:mma') + ".\n\nTime to wake up.", {alert: true, bgm: false, volume: 0})
+          break;
+        case "Lunch":
+          if (present > 1) tts.speak("It's " + moment().format('h:mma') + ". It's time to eat lunch.", {alert: true, bgm: false, volume: 0})
           break;
         case "Sunset":
           if (present > 1) tts.speak("It's " + moment().format('h:mma') + ". It will be dark soon.\n\nTurn on a light.", {alert: true, bgm: false, volume: 0})

@@ -33,24 +33,52 @@ There are also audio events. There is a PIR sensor -- a sensor to know if a pers
 
 ## Quick installation guide
 
-  1. Be on rasbian jessie
-  1. http://www.raspberrypi-spy.co.uk/2015/06/how-to-disable-wifi-power-saving-on-the-raspberry-pi/ because what in the ever loving fuck.
-  2. Install chrome browser 44: https://www.raspberrypi.org/forums/viewtopic.php?t=121195
-  3. sudo apt-get update
-  sudo apt-get upgrade
-  1. $ wget http://node-arm.herokuapp.com/node_latest_armhf.deb
+1. Be on rasbian jessie
+1. Disable wifi power saving because FUCK YOU http://www.raspberrypi-spy.co.uk/2015/06/how-to-disable-wifi-power-saving-on-the-raspberry-pi/ because what in the ever loving fuck.
+1. Install chrome browser 44. TO THE GUY WHO MADE THIS POSSIBLE, I KISS YOU ON THE MOUTH https://www.raspberrypi.org/forums/viewtopic.php?t=121195
+1. sudo apt-get update
+1. sudo apt-get upgrade
+1. sudo apt-get remove nodejs
+1. Download latest node $ wget http://node-arm.herokuapp.com/node_latest_armhf.deb
 once downloaded, install
-
 $ sudo dpkg -i node_latest_armhf.deb
-Check if node is successfully installed
-
 $ node -v
+1. npm install gpio
+1. might need to install wiringpi
+1. git clone https://github.com/setpixel/weather-display.git
+1. cd weather-display
+1. npm install
+1. rename config-sample.js to config.js
+1. Get an ivona account
+1. Get a forecast account
+1. Look up your lat long: http://www.latlong.net/
+1. edit config file
+1. Install sox
+1. sudo apt-get install libsox-fmt-mp3
+1. npm install
+1. sudo npm start (NEED TO BE SUDO FOR GPIO STUFF)
 
+Optional:
 
-  1. Clone or download the repo
-  1. Get an ivona account
-  1. Get a forecast account
-  1. Look up your lat long: http://www.latlong.net/
-  1. Install sox
-  2. npm install
-  3. npm start
+1. disable leds
+2. set up to boot into weather display
+  1. sudo apt-get install matchbox-window-manager
+  1. cp /etc/xdg/lxsession/LXDE-pi/autostart /home/pi/.config/lxsession/LXDE-pi/autostart
+  1. sudo nano /home/pi/.config/lxsession/LXDE-pi/autostart
+  1. paste in:
+  #@lxpanel --profile LXDE-pi
+#@pcmanfm --desktop --profile LXDE-pi
+#@xscreensaver -no-splash
+@xset s off
+@xset -dpms
+@xset s noblank
+@chromium-browser --kiosk --incognito http://localhost:3000
+  1. edit crontab
+3. Edit crontab to turn display on in the morning and off at late night
+  crontab -e
+
+  # m h  dom mon dow   command
+@reboot sleep 6 && cd ~/git/weather-display && sudo npm start
+0 7 * * * tvservice -p && fbset -depth 16
+0 23 * * * tvservice -o
+

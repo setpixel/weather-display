@@ -25,6 +25,7 @@
   "dependencies": {
     "express": "^4.13.3",
     "forecast.io-bluebird": "0.0.1",
+    "ivona-node": "^0.2.0",
     "moment": "^2.11.1",
     "node-localstorage": "^1.1.2",
     "rpi-gpio": "^0.7.0"

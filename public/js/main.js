@@ -27,7 +27,7 @@
   var loadAPICall = function(force) {
     console.log("get data")
     $.ajax({
-      url: "http://localhost:3000/api/weather",
+      url: "/api/weather",
       type: 'GET',
       success: function (data) {
         weatherData = window.weatherData = data.weather;
