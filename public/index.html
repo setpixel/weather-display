@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Weather Display</title>
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" media="all" href="css/main.css">
+  </head>
+  <body>
+    <div id="bg">
+      <div id="shade"></div>
+      <div id="date_container">
+      <div id="date"></div><div id="clock"></div>
+      <div id="countdown"><span class="contdown-label"></div>
+      </div>
+      <div id="current_temp"></div>
+      <canvas id="current_condition_icon" width="128" height="128"></canvas>
+      <div id="today_text" class="summary_text"></div>
+      <canvas id="graph_day" width="980" height="250"></canvas>
+      <div id="thisweek_text" class="summary_text"></div>
+      <div>This is some text</div>
+    </div>
+    <script src="js/libs/jquery.min.js"></script>
+    <script src="js/libs/moment.min.js"></script>
+    <script src="js/libs/skycons.js"></script>
+    <script src="js/libs/curve.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

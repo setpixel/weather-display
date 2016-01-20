@@ -1,0 +1,32 @@
+{
+  "name": "weather-display",
+  "version": "0.0.1",
+  "description": "A weather display system for the home, on the Raspberry Pi platform and various sensors",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/setpixel/weather-display.git"
+  },
+  "keywords": [
+    "weather",
+    "raspberry",
+    "pi"
+  ],
+  "author": "Charles Forman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/setpixel/weather-display/issues"
+  },
+  "homepage": "https://github.com/setpixel/weather-display#readme",
+  "dependencies": {
+    "express": "^4.13.3",
+    "forecast.io-bluebird": "0.0.1",
+    "moment": "^2.11.1",
+    "node-localstorage": "^1.1.2",
+    "rpi-gpio": "^0.7.0"
+  }
+}

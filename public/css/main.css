@@ -1,0 +1,126 @@
+@font-face { font-family: 'HelveticaT'; src: url('../fonts/helvnue-th.otf'); } 
+
+body, html { 
+    overflow-x: hidden; 
+    overflow-y: hidden;
+    cursor: none;
+}
+
+body {
+	font-family: "HelveticaT";
+	font-weight: 100;
+	margin: 0px;
+	background-color: rgb(0,0,0);
+}
+
+#bg {
+	font-family: "HelveticaT";
+	background-color: rgb(0,0,0);
+	width: 1080px;
+	height: 1920px;
+	margin: 0px;
+	padding: 0px;
+/*	-webkit-transform: rotate(90deg) translate(0px,-1920px);
+	-webkit-transform-origin: top left;
+*/	color: rgb(255,255,255);
+}
+
+#bg.sunset {
+	color: rgb(255,200,200);
+}
+
+#bg.night {
+	color: rgb(40,0,0);
+}
+
+
+.alert {
+	background-color: rgb(0,255,255) !important;
+}
+
+#shade {
+	display: block;
+	position: absolute;
+	width: 1200px;
+	height: 1920px;
+/*	background-color: rgba(80,30,0,0.5);
+*/	background-color: rgba(30,0,0,0.85);
+	z-index: 99;
+	mix-blend-mode: multiply;
+	display: none;
+}
+
+#current_temp {
+	font-size: 400px;
+	display: inline-block;
+	left: 40px;
+	position: relative;
+	line-height: 400px;
+	margin: 0px;
+	padding: 0px;
+	top: 80px;
+}
+
+#current_condition_icon {
+	position: relative;
+	display: inline-block;
+	top: -90px;
+	left: 30px;
+}
+
+
+#clock {
+	font-size: 100px;
+	line-height: 1em;
+	position: relative;
+	display: inline-block;
+	float: right;
+}
+
+#countdown {
+	font-size: 50px;
+	top: -30px;
+	position: relative;
+}
+
+.contdown-label {
+	opacity: 0.3;
+}
+
+#date {
+	font-size: 28px;
+	right: 20px;
+	top: 0px;
+	line-height: 1em;
+	position: relative;
+	display: inline-block;
+	opacity: 0.3;
+
+
+}
+
+#date_container {
+	font-size: 100px;
+	line-height: 1em;
+	position: absolute;
+	top: 50px;
+	right: 50px;
+	text-align: right;
+
+}
+
+#graph_day {
+	position: relative;
+	left: 50px;
+	margin-bottom: 50px;
+	border-radius: 10px;
+}
+
+
+.summary_text {
+	margin-left: 50px;
+	margin-right: 50px;
+	margin-bottom: 50px;
+	font-size: 50px;
+	line-height: 60px;
+}
