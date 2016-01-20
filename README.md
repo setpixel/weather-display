@@ -14,7 +14,8 @@ There are also audio events. There is a PIR sensor -- a sensor to know if a pers
   Wake up:
     When you wake up in the morning, it will read the weather to you, and play the NPR Hourly News Summary.
 
-    LINK TO SAMPLE.MP3
+    [Hear a sample of what plays when you enter the room in the morning](https://www.dropbox.com/s/btc129m90bbj6ul/sample.mp3?dl=0)
+    
   Every hour:
     If you are in the room, a lower volume audio event will trigger, with the time on the hour. '*Ding* 5 p.m.'
   When you get home:
