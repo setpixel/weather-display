@@ -29,7 +29,7 @@ const config = {
   port: process.env.PORT || 3000,
   logLevel: 0,
   presenceTimeout: 2*60*1000, // 2 minutes
-  awayTimeout: 60*60*1000, // 1 hour
+  awayTimeout: 35*60*1000, // 35 minutes
   goneTimeout: 3*60*60*1000, // 3 hours
   gpioPin: 13,
 }
