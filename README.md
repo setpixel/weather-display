@@ -1,4 +1,4 @@
-# Weather Display (on Raspberry Pi / Node.js)
+# Talking Weather Display (on Raspberry Pi / Node.js)
 
 The Weather Display shows you the weather at all times. It's a digital display that passively displays the weather. If you put it in an area of your home you can see at most times, you can simply glance in the direction of the display, and you'll see the weather. It runs on a Raspberry Pi Zero, so it's also mad cheap!
 
@@ -12,7 +12,7 @@ The design is simple and elegant, telling you what you need to know and not much
 
 With the right display, you can hook up all the wires and enclose the unit behind the monitor so that all you have to do is plug in the display, and it works.
 
-## But wait, theres more!
+## But wait, theres more! It speaks to you!
 
 It does some more smart stuff. After sunset, the display will cut it's blue channel for circadian lighting. After bed time, it will significantly dim, but still be readable. After midnight, the display will go to sleep.
 
