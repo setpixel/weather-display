@@ -37,6 +37,8 @@ const config = {
   mopidyAddress: 'ws://10.0.1.37:6680/mopidy/ws/',
   newsPodcastUri: 'podcast+http://www.npr.org/rss/podcast.php?id=500005',
   musicPlaylistUri: 'spotify:user:setpixel:playlist:0P2T0VBhivKnAjqEwXJkmG',
+  playMusicAfter: 10*60*1000, // play music after present for 10 minutes
+  stopMusicAfter: 20*60*1000, // stop playing music after 20 minutes of gone
 }
 
 module.exports = config

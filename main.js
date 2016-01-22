@@ -26,7 +26,6 @@ var present = 0
 var lastPresentTime = Date.now()
 var presentSince = Date.now()
 var wakeGreeting = true
-var playingMusic = false
 
 function init() {
 
@@ -38,10 +37,11 @@ function init() {
   Logger.log(`♪♫♪ GUITAR RIFF ♪♫♪`, 100)
   Logger.log('=============================================', 100)
 
-  tts = new TTS()
-  tts.speak(`Weather display... is online.`, {alert: false, bgm: true, volume: 0})
-
+  // Set up Mopidy Music player.
   musicPlayer = new MusicPlayer()
+
+  tts = new TTS(musicPlayer)
+  //tts.speak(`Weather display... is online.`, {alert: false, bgm: true, volume: 0})
 
   // Web stuff
   app.get('/', (req, res) => res.sendFile(__dirname + '/public/index.html'))
@@ -51,28 +51,35 @@ function init() {
   .get(function(req, res) {
     res.json({ appearalDegrees: config.appearalDegrees, dayMilestones: dayMilestones, weather: weatherData })
   })
+  router.route('/status')
+  .get(function(req, res) {
+    res.json({ status: getStatus() })
+  })
   router.route('/present')
   .get(function(req, res) {
     setPresent()
     present = 3
     res.json({ present: present })
   })
-  router.route('/playnews')
+  router.route('/music/playnews')
   .get(function(req, res) {
     musicPlayer.playPodcast(config.newsPodcastUri)
-    res.json({ play: present })
+    res.json({ play: 'news' })
   })
-  router.route('/playmusic')
+  router.route('/music/play')
   .get(function(req, res) {
     musicPlayer.playPlaylist(config.musicPlaylistUri)
-    res.json({ play: present })
+    res.json({ play: musicPlayer.playing })
   })
-  router.route('/stopmusic')
+  router.route('/music/stop')
   .get(function(req, res) {
     musicPlayer.stop()
-    playingMusic = false
     presentSince = Date.now()
-    res.json({ play: present })
+    res.json({ play: musicPlayer.playing })
+  })
+  router.route('/music/getstatus')
+  .get(function(req, res) {
+    res.json({ playing: musicPlayer.playing })
   })
   router.route('/morninggreeting')
   .get(function(req, res) {
@@ -96,7 +103,7 @@ function init() {
     textArray.push('<break length="x-strong"/>')
     textArray.push(`Have a great day!`)
 
-    tts.speak(textArray.join('\n\n'), {alert: true, bgm: true, volume: 7, playnews: true}, musicPlayer)
+    tts.speak(textArray.join('\n\n'), {alert: true, bgm: true, volume: 7, playnews: true})
     res.json({ play: present })
   })
   router.route('/speak/:string')
@@ -114,6 +121,10 @@ function init() {
   // load internet information
   getForecast()
   setInterval(()=>{getForecast(true)}, config.forecast.checkInterval)
+
+  // log status information
+  setTimeout(getStatus, 5000)
+  setInterval(getStatus, 15*60*1000)
 
   // check every second for new events
   setInterval(checkTime, 1000)
@@ -139,6 +150,20 @@ function init() {
     })
   }
 
+}
+
+function getStatus() {
+  var statusString = [];
+  statusString.push('present: ' + present)
+  statusString.push('present since: ' + moment.duration(Date.now()-presentSince).asMinutes().toFixed(2))
+  statusString.push('away since: ' + moment.duration(Date.now()-lastPresentTime).asMinutes().toFixed(2))
+  statusString.push('music playing: ' + musicPlayer.playing)
+  statusString.push('quiet: ' + quiet)
+  statusString.push('wakeGreeting: ' + wakeGreeting)
+  statusString.push('nextEvent: ' + dayMilestones[previousNextThing][0])
+  statusString = 'STATUS: ' + statusString.join(' | ')
+  Logger.log(statusString)
+  return statusString
 }
 
 function getForecast(force) {
@@ -214,17 +239,24 @@ function checkTime() {
           tts.speak("It's " + moment().format('h:mma') + ".\n\nTime to wake up.", {alert: true, bgm: false, volume: 0})
           break
         case "Lunch":
-          if (present > 1) tts.speak("It's " + moment().format('h:mma') + ". It's time to eat lunch.", {alert: true, bgm: false, volume: 0})
+          if (present > 1) tts.speak("It's " + moment().format('h:mma') + ". It's time to eat lunch.", {alert: true, bgm: false, volume: 7})
           break
         case "Sunset":
-          if (present > 1) tts.speak("It's " + moment().format('h:mma') + ". It will be dark soon.\n\nTurn on a light.", {alert: true, bgm: false, volume: 0})
+          if (present > 1) tts.speak("It's " + moment().format('h:mma') + ". It will be dark soon.\n\nTurn on a light.", {alert: true, bgm: false, volume: 7, playnews: true})
           break
         case "Get ready for bed":
-          if (present > 1) tts.speak("Time to get ready for bed. It's " + moment().format('h:mma'), {alert: true, bgm: false, volume: 0})
+          if (present > 1) tts.speak("Time to get ready for bed. It's " + moment().format('h:mma'), {alert: true, bgm: false, volume: 7})
+          if (musicPlayer.playing) {
+            musicPlayer.fadeOut()
+            musicPlayer.volume = 20
+          }
           break
         case "Bed time":
-          if (present > 1) tts.speak("Alright. It's time to go ready for bed. It's " + moment().format('h:mma'), {alert: true, bgm: false, volume: 0})
+          if (present > 1) tts.speak("Alright. It's time to go ready for bed. It's " + moment().format('h:mma'), {alert: true, bgm: false, volume: 5})
           quiet = true
+          if (musicPlayer.playing) {
+            musicPlayer.stop()
+          }
           break
       }
     }
@@ -238,10 +270,9 @@ function checkTime() {
     } 
   }
 
-  if (present > 2 && !playingMusic) {
-    if ((Date.now() - presentSince)> (35*60*1000)) {
+  if (present > 2 && !musicPlayer.playing && !quiet) {
+    if ((Date.now() - presentSince)> (config.playMusicAfter)) {
       musicPlayer.playPlaylist(config.musicPlaylistUri)
-      playingMusic = true
     }
   }
 
@@ -253,15 +284,24 @@ function checkTime() {
       present = 0
     } else if (timeSince > config.awayTimeout) {
       if (present !==1) Logger.log("PRESENT: 1. I am away.")
-      musicPlayer.stop()
-      playingMusic = false
-      presentSince = Date.now()
       present = 1
     } else if (timeSince > config.presenceTimeout) {
       if (present !==2) Logger.log("PRESENT: 2. I am a little away.")
       present = 2
     }
   }
+
+  if (present < 3) {
+    var timeSince = Date.now() - lastPresentTime
+
+    if (timeSince > config.stopMusicAfter) {
+      if (musicPlayer.playing) {
+        musicPlayer.stop()
+        presentSince = Date.now()
+      }
+    }
+  }
+
 }
 
 function getApperel(degrees) {
@@ -283,7 +323,7 @@ function setPresent() {
   // console.log("previousNextThing: " + previousNextThing)
   // console.log("dayMilestones: " + dayMilestones)
 
-  if (present !== 3 && present !== 4) {
+  if (present < 2) {
     presentSince = Date.now()
   }
 
@@ -336,7 +376,7 @@ function setPresent() {
           dayMilestones.forEach(function(v){if (v[0] == 'Bed time') {bedTimeHour = (v[1])}})
           var timeUntil = moment.duration(moment().hour(bedTimeHour).minute(0).diff(moment(), 'minutes', true), 'minutes').humanize()
           var text = `Welcome home.\n\n\n\n\n\n\n\nIt's ` + moment().format('h:mma') + `.\n ` + timeUntil + ` until bedtime!\n\nThere are a couple new shows on Hulu. The Daily Show and Adventure Time.\n\nLet's have a great night!`
-          tts.speak(text, {alert: true, bgm: true, volume: 7, playnews: true}, musicPlayer)
+          tts.speak(text, {alert: true, bgm: true, volume: 7, playnews: true})
         } 
         break
     }

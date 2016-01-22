@@ -27,6 +27,7 @@
     "forecast.io-bluebird": "0.0.1",
     "ivona-node": "^0.2.0",
     "moment": "^2.11.1",
+    "mopidy": "^0.5.0",
     "node-localstorage": "^1.1.2",
     "rpi-gpio": "^0.7.0"
   }

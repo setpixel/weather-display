@@ -8,11 +8,13 @@ var Logger = require('./logger')
 
 class TTS {
 
-  constructor(){
+  constructor(musicPlayer){
     this.ivona = new Ivona({
       accessKey: config.ivona.accessKey,
       secretKey: config.ivona.secretKey
     })
+
+    if (musicPlayer) this.musicPlayer = musicPlayer
 
     this.speaking = false
     this.processing = false
@@ -38,7 +40,7 @@ class TTS {
 
   }
 
-  speak(string, options, musicPlayer) {
+  speak(string, options) {
     if (!options) {
       options = {
         alert: true,
@@ -82,11 +84,13 @@ class TTS {
           this.processing = false
           Logger.log("TTS speaking: " + string.split("\n").join(''))
           this.speaking = true
+          if (this.musicPlayer.playing) this.musicPlayer.fadeDown()
           child_process.exec(`play /tmp/new2.mp3 gain +` + options.volume, () => {
             Logger.log("TTS finished playing")
+            if (this.musicPlayer.playing) this.musicPlayer.fadeUp()
             this.speaking = false
             if (options.playnews) {
-              musicPlayer.playPodcast(config.newsPodcastUri)
+              this.musicPlayer.playPodcast(config.newsPodcastUri)
             }
           })
         })
