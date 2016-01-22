@@ -14,6 +14,8 @@ class MusicPlayer {
 
     this.playing = false
     this.volume = 100
+
+    setInterval(()=>this.getState().then(), 5000)
   }
 
   playPodcast(uri) {
@@ -27,6 +29,7 @@ class MusicPlayer {
         mopidy.tracklist.add({uri: result[0].uri}).then((e)=>{
           Logger.log(`Playing news podcast`)
           mopidy.playback.play()
+          this.playing = true
         })
       })
     })
@@ -61,18 +64,27 @@ class MusicPlayer {
     if (!steps) steps = 5
     if (!ms) ms = 500
     if (!downTo) downTo = 20
-
-    mopidy.mixer.getVolume().then((e)=>{
-      this.volume = e
-      for (var i = 1; i <= steps; i++) {
-        var volumeChunks = (this.volume - downTo) / steps
-        var volume = Math.round(this.volume - (volumeChunks * i))
-        //console.log(volume, (ms/steps)*i)
-        setTimeout(function(){
-          mopidy.mixer.setVolume({volume: Number(this)})
-        }.bind(volume), (ms/steps)*i)
-      }
+    var thisVolume = this.volume
+    var promise = new Promise( function (resolve, reject) {
+      mopidy.mixer.getVolume().then((e)=>{
+        thisVolume = e
+        for (var i = 1; i <= steps; i++) {
+          var volumeChunks = (thisVolume - downTo) / steps
+          var volume = Math.round(thisVolume - (volumeChunks * i))
+          if (i == steps) {
+            setTimeout(function(){
+              mopidy.mixer.setVolume({volume: Number(this)}).then(()=>{
+                resolve(true)
+              })}.bind(volume), (ms/steps)*i)
+          } else {
+            setTimeout(function(){
+              mopidy.mixer.setVolume({volume: Number(this)}).then(()=>{
+              })}.bind(volume), (ms/steps)*i)
+          }
+        }
+      })
     })
+    return promise
   }
 
   fadeUp(steps, ms, to) {
@@ -80,17 +92,31 @@ class MusicPlayer {
     if (!steps) steps = 10
     if (!ms) ms = 500
     if (to) this.volume = to
-
     mopidy.mixer.getVolume().then((e)=>{
       for (var i = 1; i <= steps; i++) {
         var volumeChunks = Math.abs(this.volume - e) / steps
         var volume = Math.round(e + (volumeChunks * i))
-        //console.log(volume, (ms/steps)*i)
         setTimeout(function(){
           mopidy.mixer.setVolume({volume: Number(this)})
         }.bind(volume), (ms/steps)*i)
       }
     })
+  }
+
+  getState() {
+    var mopidy = this.mopidy
+    var thisObj = this;
+    var promise = new Promise( function (resolve, reject) {
+      mopidy.playback.getState().then((e)=>{
+        if (e !== 'playing') {
+          thisObj.playing = false
+        } else {
+          thisObj.playing = true
+        }
+        resolve(thisObj.playing)
+      })
+    })
+    return promise
   }
 
 }

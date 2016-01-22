@@ -69,6 +69,7 @@ The Weather Display is a breeze to install with only 21 easy steps. If you're a 
 
 Optional:
 
+1.  https://docs.mopidy.com/en/latest/installation/debian/#debian-install
 1. Disable LEDs on Pi
 2. Set up to boot into weather display
   1. $ sudo apt-get install matchbox-window-manager x11-xserver-utils unclutter

@@ -1,20 +1,12 @@
 # TODO
 
-play music if here for a while in 
+its going to rain alert or any precip? snow?
 
-to add to config:
-  play npr news in morning
-    // http://www.npr.org/rss/podcast.php?id=452538242
-  play npr news when get home
-  play npr news at sunset
+legit colder than yesterday (currently it just says it is)
 
 detect if on raspberry pi or computer 
   change orientation
   init the gpio stuff
-
-its going to rain alert or any precip? snow?
-
-legit colder than yesterday (currently it just says it is)
 
 Figure out volume issue
 
@@ -28,6 +20,12 @@ Special work days
 
 RSS feed reader for news
 
-Install mopidy
+# TO TEST
 
-  https://docs.mopidy.com/en/latest/installation/debian/#debian-install
+  play music if here for a while in 
+
+  to add to config:
+    play npr news in morning
+      // http://www.npr.org/rss/podcast.php?id=452538242
+    play npr news when get home
+    play npr news at sunset

@@ -244,10 +244,13 @@ function checkTime() {
         case "Sunset":
           if (present > 1) tts.speak("It's " + moment().format('h:mma') + ". It will be dark soon.\n\nTurn on a light.", {alert: true, bgm: false, volume: 7, playnews: true})
           break
+        case "Dinner":
+          if (present > 1) tts.speak("It's dinner time! It's " + moment().format('h:mma'), {alert: true, bgm: false, volume: 7, playnews: true})
+          break
         case "Get ready for bed":
           if (present > 1) tts.speak("Time to get ready for bed. It's " + moment().format('h:mma'), {alert: true, bgm: false, volume: 7})
           if (musicPlayer.playing) {
-            musicPlayer.fadeOut()
+            musicPlayer.fadeDown()
             musicPlayer.volume = 20
           }
           break
