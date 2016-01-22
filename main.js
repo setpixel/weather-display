@@ -239,7 +239,7 @@ function checkTime() {
   }
 
   if (present > 2 && !playingMusic) {
-    if ((Date.now() - presentSince)> 20000) {
+    if ((Date.now() - presentSince)> (35*60*1000)) {
       musicPlayer.playPlaylist(config.musicPlaylistUri)
       playingMusic = true
     }
