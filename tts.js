@@ -1,7 +1,7 @@
 'use strict'
 
-const fs = require('fs');
-var child_process = require('child_process');
+const fs = require('fs')
+var child_process = require('child_process')
 var Ivona = require('ivona-node/')
 var config = require('./config')
 var Logger = require('./logger')
@@ -14,8 +14,8 @@ class TTS {
       secretKey: config.ivona.secretKey
     })
 
-    this.speaking = false;
-    this.processing = false;
+    this.speaking = false
+    this.processing = false
 
     this.voiceOptions = {
       body: {
@@ -38,7 +38,7 @@ class TTS {
 
   }
 
-  speak(string, options) {
+  speak(string, options, musicPlayer) {
     if (!options) {
       options = {
         alert: true,
@@ -46,11 +46,11 @@ class TTS {
         volume: 7,
       }
     }
-    Logger.log("speaking: " + string)
     if (this.processing || this.speaking) {
-      Logger.log("I'm already speaking or processing. Abandoning.");
+      Logger.log("Attempted to speak... I'm already speaking or processing. Abandoning.")
     } else {
-      this.processing = true;
+      Logger.log("TTS processing: " + string.split("\n").join(''))
+      this.processing = true
       this.ivona.createVoice(`<prosody rate="+10%">` + string + `</prosody>`, JSON.parse(JSON.stringify(this.voiceOptions)))
       .pipe(fs.createWriteStream('/tmp/text.mp3'))
       .on('finish', () => {
@@ -80,10 +80,14 @@ class TTS {
         }
         child_process.exec(commands.join(' && '), () => {
           this.processing = false
+          Logger.log("TTS speaking: " + string.split("\n").join(''))
           this.speaking = true
           child_process.exec(`play /tmp/new2.mp3 gain +` + options.volume, () => {
-            Logger.log("finished playing")
+            Logger.log("TTS finished playing")
             this.speaking = false
+            if (options.playnews) {
+              musicPlayer.playPodcast(config.newsPodcastUri)
+            }
           })
         })
       })

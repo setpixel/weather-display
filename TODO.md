@@ -1,27 +1,33 @@
 # TODO
 
+play music if here for a while in 
+
+to add to config:
+  play npr news in morning
+    // http://www.npr.org/rss/podcast.php?id=452538242
+  play npr news when get home
+  play npr news at sunset
+
 detect if on raspberry pi or computer 
   change orientation
   init the gpio stuff
 
-hook up hardware sensors
+its going to rain alert or any precip? snow?
 
-its going to rain alert
-legit colder than yesterday
-load npr news hour and play it in the morning
+legit colder than yesterday (currently it just says it is)
 
-when you get home
+Figure out volume issue
 
-make hourly notifs an option
+SOUND
+  make more bgm for different weather conditions
+  different event sounds for different events? morning, hourly (maybe this is overkill)
 
-make hourly less volume
+Hook in Calendar?
 
-make more bgm for different weather conditions
+Special work days
 
-different alerts?
+RSS feed reader for news
 
-calendar?
+Install mopidy
 
-yuni work days
-
-rss feed reader
+  https://docs.mopidy.com/en/latest/installation/debian/#debian-install
