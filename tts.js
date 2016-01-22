@@ -84,7 +84,19 @@ class TTS {
           this.processing = false
           Logger.log("TTS speaking: " + string.split("\n").join(''))
           this.speaking = true
-          this.musicPlayer.fadeDown().then(()=>{
+          
+          if (this.musicPlayer.playing) {
+            this.musicPlayer.fadeDown().then(()=>{
+              child_process.exec(`play /tmp/new2.mp3 gain +` + options.volume, () => {
+                Logger.log("TTS finished playing")
+                if (this.musicPlayer.playing) this.musicPlayer.fadeUp()
+                this.speaking = false
+                if (options.playnews) {
+                  this.musicPlayer.playPodcast(config.newsPodcastUri)
+                }
+              })
+            })
+          } else {
             child_process.exec(`play /tmp/new2.mp3 gain +` + options.volume, () => {
               Logger.log("TTS finished playing")
               if (this.musicPlayer.playing) this.musicPlayer.fadeUp()
@@ -93,7 +105,7 @@ class TTS {
                 this.musicPlayer.playPodcast(config.newsPodcastUri)
               }
             })
-          })
+          }
         })
       })
     }
