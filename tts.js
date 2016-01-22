@@ -84,7 +84,7 @@ class TTS {
           this.processing = false
           Logger.log("TTS speaking: " + string.split("\n").join(''))
           this.speaking = true
-          if (this.musicPlayer.playing) this.musicPlayer.fadeDown().then(()=>{
+          this.musicPlayer.fadeDown().then(()=>{
             child_process.exec(`play /tmp/new2.mp3 gain +` + options.volume, () => {
               Logger.log("TTS finished playing")
               if (this.musicPlayer.playing) this.musicPlayer.fadeUp()
