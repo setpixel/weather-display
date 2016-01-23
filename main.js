@@ -111,7 +111,7 @@ function init() {
     tts.speak(req.params.string, {
         alert: true,
         bgm: false,
-        volume: 0,
+        volume: 7,
       })
     res.json({ string: req.params.string })
   })

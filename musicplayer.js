@@ -15,11 +15,12 @@ class MusicPlayer {
     this.playing = false
     this.volume = 100
 
-    setInterval(()=>this.getState().then(), 5000)
+    setInterval(()=>this.getState().then(), 10000)
   }
 
   playPodcast(uri) {
     var mopidy = this.mopidy
+    this.playing = true
 
     this.volume = 100
     mopidy.mixer.setVolume({volume: this.volume})
@@ -29,7 +30,6 @@ class MusicPlayer {
         mopidy.tracklist.add({uri: result[0].uri}).then((e)=>{
           Logger.log(`Playing news podcast`)
           mopidy.playback.play()
-          this.playing = true
         })
       })
     })
@@ -37,6 +37,7 @@ class MusicPlayer {
 
   playPlaylist(uri) {
     var mopidy = this.mopidy
+    this.playing = true
 
     this.volume = 100
     mopidy.mixer.setVolume({volume: this.volume})
@@ -46,7 +47,6 @@ class MusicPlayer {
         mopidy.tracklist.shuffle().then(()=>{
           Logger.log(`Playing music playlist`)
           mopidy.playback.play()
-          this.playing = true
         })
       })
     })
