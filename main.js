@@ -7,7 +7,8 @@ var LocalStorage = require('node-localstorage').LocalStorage
 var localStorage = new LocalStorage('./scratch')
 var moment = require('moment')
 var Forecast = require('forecast.io-bluebird')
-var os = require("os")
+var os = require('os')
+var path = require('path')
 var config = require('./config')
 if (os.hostname() == config.hostname) {
   var gpio = require('rpi-gpio')
