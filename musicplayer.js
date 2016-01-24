@@ -55,8 +55,8 @@ class MusicPlayer {
   stop() {
     var mopidy = this.mopidy
     Logger.log(`Stopping music`)
-    mopidy.playback.stop()
     this.playing = false
+    mopidy.playback.stop()
   }
 
   fadeDown(steps, ms, downTo) {

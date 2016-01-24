@@ -45,7 +45,7 @@ function init() {
 
   // Web stuff
   app.get('/', (req, res) => res.sendFile(__dirname + '/public/index.html'))
-  app.use(express.static('public'))
+  app.use(express.static(path.join(__dirname, 'public')));
   var router = express.Router()
   router.route('/weather')
   .get(function(req, res) {
@@ -177,6 +177,7 @@ function getForecast(force) {
       weatherData = data
       localStorage.setItem("weatherData", JSON.stringify(weatherData))
       Logger.log('Forecast.io: Got weather data from internet.')
+      checkForPrecipitation()
     })
     .catch(function(error) {
       Logger.log("Forecast.io Error: " + error)
@@ -185,6 +186,21 @@ function getForecast(force) {
     weatherData = JSON.parse(localStorage.getItem("weatherData"))
     Logger.log('Forecast.io: Got weather data from localstorage.')
   }
+  checkForPrecipitation()
+}
+
+function checkForPrecipitation() {
+  // console.log(weatherData.minutely.data)
+
+  // var totalaccumulation = 0;
+
+  // for (var i = 0; i < weatherData.hourly.data.length; i++) {
+  //   var node = weatherData.hourly.data[i]
+  //   totalaccumulation+= node.precipAccumulation
+  //   console.log(moment(node.time*1000).format('h:mma') + " " + node.summary + ", total: " +  totalaccumulation)
+  //   //console.log(node.summary, moment(node.time*1000).format('h:mma'))
+  //   //console.log(node.precipProbability, node.precipType, moment(node.time*1000).format('h:mma'))
+  // }
 }
 
 var previousNextThing
@@ -296,7 +312,6 @@ function checkTime() {
 
   if (present < 3) {
     var timeSince = Date.now() - lastPresentTime
-
     if (timeSince > config.stopMusicAfter) {
       if (musicPlayer.playing) {
         musicPlayer.stop()
