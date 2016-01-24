@@ -1,5 +1,7 @@
 'use strict'
 
+process.chdir(__dirname)
+
 var express = require('express')
 var app = express()
 var server = require('http').Server(app)
