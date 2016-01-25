@@ -1,5 +1,8 @@
 # TODO
 
+
+save volume
+
 its going to rain alert or any precip? snow?
 
 legit colder than yesterday (currently it just says it is)
@@ -20,6 +23,9 @@ Special work days
 
 RSS feed reader for news
 
+voice input
+
+
 # TO TEST
 
   play music if here for a while in 
@@ -29,3 +35,10 @@ RSS feed reader for news
       // http://www.npr.org/rss/podcast.php?id=452538242
     play npr news when get home
     play npr news at sunset
+
+
+  add button mute music
+  // add pin for button
+
+
+

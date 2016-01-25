@@ -29,6 +29,9 @@ var present = 0
 var lastPresentTime = Date.now()
 var presentSince = Date.now()
 var wakeGreeting = true
+var dontPlayMusicUntil = 0
+var buttonTime = Date.now()
+var buttonPressCount = 0
 
 function init() {
 
@@ -78,6 +81,13 @@ function init() {
   .get(function(req, res) {
     musicPlayer.stop()
     presentSince = Date.now()
+    res.json({ play: musicPlayer.playing })
+  })
+  router.route('/music/delay')
+  .get(function(req, res) {
+    musicPlayer.stop()
+    presentSince = Date.now()
+    dontPlayMusicUntil = Math.max(dontPlayMusicUntil, Date.now()) + (30*60*1000)
     res.json({ play: musicPlayer.playing })
   })
   router.route('/music/getstatus')
@@ -134,13 +144,12 @@ function init() {
 
   // get information from sensors
   if (gpio) {
-    gpio.setup(config.gpioPin, gpio.DIR_IN, gpio.EDGE_BOTH, function(e){
-      Logger.log('Error setting up GPIO Pin.')
-    })
+    gpio.setup(config.pirGpioPin, gpio.DIR_IN, gpio.EDGE_BOTH)
+    gpio.setup(config.buttonGpioPin, gpio.DIR_IN, gpio.EDGE_BOTH)
 
     gpio.on('change', function(channel, value) {
       Logger.log('Channel ' + channel + ' value is now ' + value)
-      if (channel == config.gpioPin) {
+      if (channel == config.pirGpioPin) {
         if (value) {
           Logger.log('+++ PIR ACTIVATED: present: 4')
           setPresent()
@@ -150,9 +159,31 @@ function init() {
         }
       }
 
+      if (channel == config.buttonGpioPin) {
+        if (!value) {
+          if ((Date.now() - buttonTime) > 500) {
+            buttonPress()
+            buttonTime = Date.now()
+          }
+        }
+      }
+
+
     })
   }
 
+}
+
+function buttonPress() {
+  if (buttonPressCount == 0) {
+    musicPlayer.fadeDown(null, null, 20).then(()=> musicPlayer.volume = 20)
+  } else {
+    musicPlayer.stop()
+    presentSince = Date.now()
+    dontPlayMusicUntil = Math.max(dontPlayMusicUntil, Date.now()) + (30*60*1000)
+    Logger.log('Not playing playing music for: ' + moment(dontPlayMusicUntil).toNow(true))
+  }
+  buttonPressCount++
 }
 
 function getStatus() {
@@ -161,6 +192,7 @@ function getStatus() {
   statusString.push('present since: ' + moment.duration(Date.now()-presentSince).asMinutes().toFixed(2))
   statusString.push('away since: ' + moment.duration(Date.now()-lastPresentTime).asMinutes().toFixed(2))
   statusString.push('music playing: ' + musicPlayer.playing)
+  statusString.push('dont play music for: ' + moment.duration(Date.now()-dontPlayMusicUntil).asMinutes().toFixed(2))
   statusString.push('quiet: ' + quiet)
   statusString.push('wakeGreeting: ' + wakeGreeting)
   statusString.push('nextEvent: ' + dayMilestones[previousNextThing][0])
@@ -266,15 +298,17 @@ function checkTime() {
         case "Dinner":
           if (present > 1) tts.speak("It's dinner time! It's " + moment().format('h:mma'), {alert: true, bgm: false, volume: 7, playnews: true})
           break
+        case "Time to bone":
+          if (present > 1) tts.speak("It's " + moment().format('h:mma') + "It's time to bone!", {alert: true, bgm: false, volume: 7})
+          break
         case "Get ready for bed":
           if (present > 1) tts.speak("Time to get ready for bed. It's " + moment().format('h:mma'), {alert: true, bgm: false, volume: 7})
           if (musicPlayer.playing) {
-            musicPlayer.fadeDown()
-            musicPlayer.volume = 20
+            musicPlayer.fadeDown(null, null, 20).then(()=> musicPlayer.volume = 20)
           }
           break
         case "Bed time":
-          if (present > 1) tts.speak("Alright. It's time to go ready for bed. It's " + moment().format('h:mma'), {alert: true, bgm: false, volume: 5})
+          if (present > 1) tts.speak("Alright. It's time to go to bed. It's " + moment().format('h:mma'), {alert: true, bgm: false, volume: 5})
           quiet = true
           if (musicPlayer.playing) {
             musicPlayer.stop()
@@ -293,7 +327,8 @@ function checkTime() {
   }
 
   if (present > 2 && !musicPlayer.playing && !quiet) {
-    if ((Date.now() - presentSince)> (config.playMusicAfter)) {
+    if (((Date.now() - presentSince)> config.playMusicAfter) && (Date.now() > dontPlayMusicUntil)) {
+      buttonPressCount = 0
       musicPlayer.playPlaylist(config.musicPlaylistUri)
     }
   }

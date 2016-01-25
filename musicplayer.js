@@ -22,8 +22,7 @@ class MusicPlayer {
     var mopidy = this.mopidy
     this.playing = true
 
-    this.volume = 100
-    mopidy.mixer.setVolume({volume: this.volume})
+    mopidy.mixer.setVolume({volume: 100})
 
     mopidy.tracklist.clear().then(()=>{
       mopidy.library.browse({uri: uri }).then((result)=>{
@@ -39,7 +38,7 @@ class MusicPlayer {
     var mopidy = this.mopidy
     this.playing = true
 
-    this.volume = 100
+    //this.volume = 100
     mopidy.mixer.setVolume({volume: this.volume})
 
     mopidy.tracklist.clear().then(()=>{
@@ -113,7 +112,9 @@ class MusicPlayer {
         } else {
           thisObj.playing = true
         }
-        resolve(thisObj.playing)
+        mopidy.mixer.getVolume().then((data)=>{
+          thisObj.volume = data
+        })
       })
     })
     return promise
