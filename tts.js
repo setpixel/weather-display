@@ -87,7 +87,7 @@ class TTS {
           
           if (this.musicPlayer.playing) {
             this.musicPlayer.fadeDown().then(()=>{
-              child_process.exec(`play /tmp/new2.mp3 gain +` + options.volume, () => {
+              child_process.exec(`play /tmp/new2.mp3`, () => {
                 Logger.log("TTS finished playing")
                 if (this.musicPlayer.playing) this.musicPlayer.fadeUp()
                 this.speaking = false
@@ -97,7 +97,7 @@ class TTS {
               })
             })
           } else {
-            child_process.exec(`play /tmp/new2.mp3 gain +` + options.volume, () => {
+            child_process.exec(`play /tmp/new2.mp3`, () => {
               Logger.log("TTS finished playing")
               if (this.musicPlayer.playing) this.musicPlayer.fadeUp()
               this.speaking = false

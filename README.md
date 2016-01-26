@@ -95,3 +95,5 @@ Optional:
 0 7 * * * tvservice -p && fbset -depth 16
 0 23 * * * tvservice -o
 ```
+
+sudo -H -u mopidy alsamixer -D equal
