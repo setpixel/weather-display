@@ -34,12 +34,16 @@ class MusicPlayer {
     })
   }
 
-  playPlaylist(uri) {
+  playPlaylist(uri, volume) {
     var mopidy = this.mopidy
     this.playing = true
 
-    //this.volume = 100
-    mopidy.mixer.setVolume({volume: this.volume})
+    if (volume) {
+      this.volume = volume
+      mopidy.mixer.setVolume({volume: this.volume})
+    } else {
+      mopidy.mixer.setVolume({volume: this.volume})
+    }
 
     mopidy.tracklist.clear().then(()=>{
       mopidy.tracklist.add({uri: uri}).then((result)=>{
@@ -62,7 +66,7 @@ class MusicPlayer {
     var mopidy = this.mopidy
     if (!steps) steps = 5
     if (!ms) ms = 500
-    if (!downTo) downTo = 20
+    if (!downTo) downTo = 10
     var thisVolume = this.volume
     var promise = new Promise( function (resolve, reject) {
       mopidy.mixer.getVolume().then((e)=>{

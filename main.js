@@ -47,7 +47,7 @@ function init() {
   musicPlayer = new MusicPlayer()
 
   tts = new TTS(musicPlayer)
-  //tts.speak(`Weather display... is online.`, {alert: false, bgm: true, volume: 0})
+  tts.speak(`Weather display... is online.`, {alert: false, bgm: true, volume: 0})
 
   // Web stuff
   app.get('/', (req, res) => res.sendFile(__dirname + '/public/index.html'))
@@ -74,7 +74,7 @@ function init() {
   })
   router.route('/music/play')
   .get(function(req, res) {
-    musicPlayer.playPlaylist(config.musicPlaylistUri)
+    musicPlayer.playPlaylist(config.musicPlaylistUri, 20)
     res.json({ play: musicPlayer.playing })
   })
   router.route('/music/stop')
@@ -176,7 +176,7 @@ function init() {
 
 function buttonPress() {
   if (buttonPressCount == 0) {
-    musicPlayer.fadeDown(null, null, 20).then(()=> musicPlayer.volume = 20)
+    musicPlayer.fadeDown(null, null, 10).then(()=> musicPlayer.volume = 10)
   } else {
     musicPlayer.stop()
     presentSince = Date.now()
@@ -304,7 +304,7 @@ function checkTime() {
         case "Get ready for bed":
           if (present > 1) tts.speak("Time to get ready for bed. It's " + moment().format('h:mma'), {alert: true, bgm: false, volume: 7})
           if (musicPlayer.playing) {
-            musicPlayer.fadeDown(null, null, 20).then(()=> musicPlayer.volume = 20)
+            musicPlayer.fadeDown(null, null, 10).then(()=> musicPlayer.volume = 10)
           }
           break
         case "Bed time":
@@ -329,7 +329,7 @@ function checkTime() {
   if (present > 2 && !musicPlayer.playing && !quiet) {
     if (((Date.now() - presentSince)> config.playMusicAfter) && (Date.now() > dontPlayMusicUntil)) {
       buttonPressCount = 0
-      musicPlayer.playPlaylist(config.musicPlaylistUri)
+      musicPlayer.playPlaylist(config.musicPlaylistUri, 20)
     }
   }
 
