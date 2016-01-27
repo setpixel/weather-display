@@ -66,7 +66,7 @@ class MusicPlayer {
     var mopidy = this.mopidy
     if (!steps) steps = 5
     if (!ms) ms = 500
-    if (!downTo) downTo = 76
+    if (!downTo) downTo = 72
     var thisVolume = this.volume
     var promise = new Promise( function (resolve, reject) {
       mopidy.mixer.getVolume().then((e)=>{
