@@ -112,6 +112,10 @@ class MusicPlayer {
     var promise = new Promise( function (resolve, reject) {
       mopidy.playback.getState().then((e)=>{
         if (e !== 'playing') {
+          if (thisObj.playing) {
+            mopidy.mixer.setVolume({volume: Number(85)})
+            thisObj.volume = 85
+          }
           thisObj.playing = false
         } else {
           thisObj.playing = true
